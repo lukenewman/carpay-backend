@@ -5,10 +5,10 @@
 //  Created by Luke Newman on 7/16/18.
 //
 
-import FluentSQLite
+import FluentPostgreSQL
 import Vapor
 
-final class Session: SQLiteModel {
+final class Session: PostgreSQLModel {
     var id: Int?
 
     var plate: String

@@ -5,11 +5,11 @@
 //  Created by Luke Newman on 7/14/18.
 //
 
-import FluentSQLite
+import FluentPostgreSQL
 import Fluent
 import Vapor
 
-final class User: SQLiteModel {
+final class User: PostgreSQLModel {
     var id: Int?
 
     var email: String
