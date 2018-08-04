@@ -21,8 +21,17 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     services.register(middlewares)
 
     /// Configure PostgreSQL database
-    let postgresqlConfig = PostgreSQLDatabaseConfig(hostname: "127.0.0.1", port: 5432, username: "luke", database: "carpay-testing", password: nil, transport: .cleartext)
-    services.register(postgresqlConfig)
+    var postgreConfig: PostgreSQLDatabaseConfig? = nil
+    if let url = Environment.get("DATABASE_URL") {
+        postgreConfig = PostgreSQLDatabaseConfig(url: url)
+    }
+    if postgreConfig == nil {
+        postgreConfig = PostgreSQLDatabaseConfig(hostname: "127.0.0.1", port: 5432, username: "luke", database: "carpay-testing", password: nil, transport: .cleartext)
+    }
+    guard let config = postgreConfig else {
+        preconditionFailure("Expected to have a valid postgreConfig")
+    }
+    services.register(config)
 
     /// Configure migrations
     var migrations = MigrationConfig()
