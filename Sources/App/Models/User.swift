@@ -33,8 +33,8 @@ extension User: Content { }     // allows HTTP message coding / decoding
 extension User: Parameter { }   // allows parameterization in route defs
 
 struct UserRequest: Content {
-    var email: String
-    var password: String
-    var plate: String
-    var stripeToken: String
+    var email: String?
+    var password: String?
+    var plate: String?
+    var stripeToken: String?
 }

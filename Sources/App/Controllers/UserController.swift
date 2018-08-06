@@ -16,19 +16,26 @@ final class UserController {
 
     func create(_ req: Request) throws -> Future<HTTPStatus> {
         return try req.content.decode(UserRequest.self).flatMap { userRequest in
+            guard let email = userRequest.email,
+                let password = userRequest.password,
+                let plate = userRequest.plate,
+                let token = userRequest.stripeToken else {
+                    throw Abort(.badRequest, reason: "Missing email, password, plate, or token from request", identifier: nil)
+            }
+
             let stripeClient = try req.make(StripeClient.self)
             return try stripeClient.customer.create(accountBalance: nil,
                                                     businessVatId: nil,
                                                     coupon: nil,
                                                     defaultSource: nil,
                                                     description: nil,
-                                                    email: userRequest.email,
+                                                    email: email,
                                                     metadata: nil,
                                                     shipping: nil,
-                                                    source: userRequest.stripeToken).flatMap(to: HTTPStatus.self) { stripeCustomer in
-                                                        let newUser = User(email: userRequest.email,
-                                                                           password: userRequest.password,
-                                                                           plate: userRequest.plate,
+                                                    source: token).flatMap(to: HTTPStatus.self) { stripeCustomer in
+                                                        let newUser = User(email: email,
+                                                                           password: password,
+                                                                           plate: plate,
                                                                            stripeCustomerID: stripeCustomer.id)
                                                         return newUser.save(on: req).map { user in
                                                             return HTTPStatus.created
