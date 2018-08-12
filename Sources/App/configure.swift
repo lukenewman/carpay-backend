@@ -7,7 +7,11 @@ import Stripe
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
     /// Register providers first
     try services.register(FluentPostgreSQLProvider())
-    services.register(StripeConfig(apiKey: "pk_test_BSHAKdpcYXK0cLOSy3wZZ5Ka"))
+    if let prodStripeKey = Environment.get("STRIPE_SECRET_KEY_PROD") {
+        services.register(StripeConfig(apiKey: prodStripeKey))
+    } else {
+        services.register(StripeConfig(apiKey: "sk_test_OrVZR4UOWHvgDEaCgSE0nPLc"))
+    }
     try services.register(StripeProvider())
 
     /// Register routes to the router

@@ -26,15 +26,18 @@ final class User: PostgreSQLModel {
         self.stripeCustomerID = stripeCustomerID
     }
 
+    var sessions: Children<User, Session> {
+        return children(\.id)
+    }
+
+    struct CreateRequest: Content {
+        var email: String
+        var password: String
+        var plate: String
+        var stripeToken: String
+    }
 }
 
 extension User: Migration { }   // allows dynamic migration
 extension User: Content { }     // allows HTTP message coding / decoding
 extension User: Parameter { }   // allows parameterization in route defs
-
-struct UserRequest: Content {
-    var email: String?
-    var password: String?
-    var plate: String?
-    var stripeToken: String?
-}
