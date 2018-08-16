@@ -8,10 +8,11 @@ public func routes(_ router: Router) throws {
 
     let userController = UserController()
     router.get("users", use: userController.index)
+//    router.get("plates", use: userController.plates)
     router.post("users", use: userController.create)
-//
-//    let sessionController = SessionController()
-//    router.post("start", use: sessionController.start)
-//    router.post("stop", use: sessionController.stop)
-    
+
+    let sessionController = SessionController()
+    router.post("start", use: sessionController.start)
+    router.post("stop", use: sessionController.stop)
+
 }

@@ -13,8 +13,6 @@ final class Session: PostgreSQLModel {
 
     var userID: Int
 
-    var plate: String
-
     var lotID: Int
 
     var entryTimestamp: Date
@@ -24,9 +22,8 @@ final class Session: PostgreSQLModel {
         return exitTimestamp == nil
     }
 
-    init(userID: Int, plate: String, lotID: Int, entryTimestamp: Date) {
+    init(userID: Int, lotID: Int, entryTimestamp: Date) {
         self.userID = userID
-        self.plate = plate
         self.lotID = lotID
         self.entryTimestamp = entryTimestamp
     }

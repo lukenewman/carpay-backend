@@ -15,18 +15,19 @@ final class User: PostgreSQLModel {
     var email: String
     var password: String
 
-    var plates: [String]
-
     var stripeCustomerID: String
 
-    init(email: String, password: String, plate: String, stripeCustomerID: String) {
+    init(email: String, password: String, stripeCustomerID: String) {
         self.email = email
         self.password = password
-        self.plates = [plate]
         self.stripeCustomerID = stripeCustomerID
     }
 
     var sessions: Children<User, Session> {
+        return children(\.id)
+    }
+
+    var plates: Children<User, Plate> {
         return children(\.id)
     }
 
@@ -35,6 +36,10 @@ final class User: PostgreSQLModel {
         var password: String
         var plate: String
         var stripeToken: String
+    }
+
+    struct PlatesRequest: Content {
+        var userID: Int
     }
 }
 
