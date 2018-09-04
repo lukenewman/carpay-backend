@@ -2,6 +2,7 @@
 import Vapor
 import FluentPostgreSQL
 import Stripe
+import Authentication
 
 /// Called before your application initializes.
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
@@ -30,16 +31,21 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
         postgreConfig = PostgreSQLDatabaseConfig(url: url)
     }
     if postgreConfig == nil {
-        postgreConfig = PostgreSQLDatabaseConfig(hostname: "127.0.0.1", port: 5432, username: "luke", database: "carpay-testing", password: nil, transport: .cleartext)
+        postgreConfig = PostgreSQLDatabaseConfig(hostname: "localhost", port: 5432, username: "luke", database: "carpay-testing", transport: .cleartext)
     }
     guard let config = postgreConfig else {
         preconditionFailure("Expected to have a valid postgreConfig")
     }
     services.register(config)
 
+    /// Configure authentication
+    try services.register(AuthenticationProvider())
+
     /// Configure migrations
     var migrations = MigrationConfig()
     migrations.add(model: User.self, database: .psql)
+    migrations.add(model: Plate.self, database: .psql)
     migrations.add(model: Session.self, database: .psql)
+    migrations.add(model: Token.self, database: .psql)
     services.register(migrations)
 }

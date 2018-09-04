@@ -12,9 +12,12 @@ let package = Package(
 
         // 💸 Stripe provider for billing.
         .package(url: "https://github.com/vapor-community/stripe-provider.git", from: "2.1.2"),
+
+        // 👤 Authentication and Authorization framework for Fluent.
+        .package(url: "https://github.com/vapor/auth.git", from: "2.0.0"),
     ],
     targets: [
-        .target(name: "App", dependencies: ["Vapor", "FluentPostgreSQL", "Stripe"]),
+        .target(name: "App", dependencies: ["Vapor", "FluentPostgreSQL", "Stripe", "Authentication"]),
         .target(name: "Run", dependencies: ["App"]),
         .testTarget(name: "AppTests", dependencies: ["App"])
     ]
