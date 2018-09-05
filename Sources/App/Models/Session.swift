@@ -36,18 +36,6 @@ final class Session: Content, PostgreSQLModel, Migration {
     }
 }
 
-public enum SessionState: UInt8, PostgreSQLRawEnum {
-    public static var allCases: [SessionState] = [.active, .finished]
-
-    case active, finished
-}
-
-extension Session {
-    var state: SessionState {
-        return exitTimestamp == nil ? .active : .finished
-    }
-}
-
 extension Session {
     func calculateCharge() -> Int {
         // TODO - get lot and calculate with that

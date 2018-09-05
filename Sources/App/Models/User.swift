@@ -25,11 +25,11 @@ final class User: Content, PostgreSQLModel {
     }
 
     var sessions: Children<User, Session> {
-        return children(\.id)
+        return children(\.userID)
     }
 
     var plates: Children<User, Plate> {
-        return children(\.id)
+        return children(\.userID)
     }
 
     struct CreateRequest: Content {

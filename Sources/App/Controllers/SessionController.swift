@@ -13,8 +13,6 @@ final class SessionController: RouteCollection {
 
     func boot(router: Router) throws {
         router.get("sessions", use: list)
-        router.get("active_sessions", use: listActive)
-        router.get("inactive_sessions", use: listInactive)
         router.post("start", use: start)
         router.post("stop", use: stop)
 
@@ -26,14 +24,6 @@ final class SessionController: RouteCollection {
 
     func list(_ req: Request) throws -> Future<[Session]> {
         return Session.query(on: req).all()
-    }
-
-    func listActive(_ req: Request) throws -> Future<[Session]> {
-        return Session.query(on: req).filter(\.state == .active).all()
-    }
-
-    func listInactive(_ req: Request) throws -> Future<[Session]> {
-        return Session.query(on: req).filter(\.state == .finished).all()
     }
 
     /*
@@ -75,7 +65,7 @@ final class SessionController: RouteCollection {
                         throw Abort(.forbidden, reason: "User doesn't exist")
                     }
 
-                    return try user.sessions.query(on: req).filter(\Session.state == .finished).first().flatMap() { session in
+                    return try user.sessions.query(on: req).filter(\.exitTimestamp == nil).first().flatMap() { session in
                         guard let session = session else {
                             throw Abort(.forbidden, reason: "Session doesn't exist")
                         }

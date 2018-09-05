@@ -38,6 +38,11 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     }
     services.register(config)
 
+    var dbs = DatabasesConfig()
+    dbs.add(database: PostgreSQLDatabase.self, as: .psql)
+    dbs.enableLogging(on: .psql)
+    services.register(dbs)
+
     /// Configure authentication
     try services.register(AuthenticationProvider())
 
